@@ -1,0 +1,33 @@
+name: Flex endpoint
+
+on:
+    push:
+        branches: [main]
+
+jobs:
+    endpoint:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.3'
+
+            - name: Install recipes-checker
+              run: |
+                  git clone --depth 1 https://github.com/symfony-tools/recipes-checker.git ../recipes-checker
+                  composer update -q -d ../recipes-checker --no-interaction
+
+            - name: Generate endpoint
+              run: git ls-tree HEAD */*/* | php ../recipes-checker/run generate:flex-endpoint uhifadhilabs/recipes main flex/main endpoint-out
+
+            - name: Publish flex/main
+              run: |
+                  cd endpoint-out
+                  git init -q -b flex/main
+                  git config user.name  'flex-endpoint[bot]'
+                  git config user.email 'flex-endpoint@users.noreply.github.com'
+                  git add -A
+                  git commit -q -m "Regenerate Flex endpoint from $GITHUB_SHA"
+                  git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/uhifadhilabs/recipes.git" flex/main
