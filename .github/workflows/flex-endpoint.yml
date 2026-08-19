@@ -7,6 +7,11 @@ on:
 jobs:
     endpoint:
         runs-on: ubuntu-latest
+        # The publish step pushes flex/main with GITHUB_TOKEN; without this the
+        # token is read-only and the push 403s. See docs.github.com/actions/
+        # security-guides/automatic-token-authentication#permissions-for-the-github_token
+        permissions:
+            contents: write
         steps:
             - uses: actions/checkout@v4
 
