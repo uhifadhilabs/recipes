@@ -20,7 +20,13 @@ jobs:
                   composer update -q -d ../recipes-checker --no-interaction
 
             - name: Generate endpoint
-              run: git ls-tree HEAD */*/* | php ../recipes-checker/run generate:flex-endpoint uhifadhilabs/recipes main flex/main endpoint-out
+              # generate:flex-endpoint writes each <pkg>.<ver>.json into the output
+              # dir with file_put_contents but never creates it — mkdir first or it
+              # dies with "No such file or directory". See recipes-checker
+              # GenerateFlexEndpointCommand::execute (writes straight to the path).
+              run: |
+                  mkdir -p endpoint-out
+                  git ls-tree HEAD */*/* | php ../recipes-checker/run generate:flex-endpoint uhifadhilabs/recipes main flex/main endpoint-out
 
             - name: Publish flex/main
               run: |
