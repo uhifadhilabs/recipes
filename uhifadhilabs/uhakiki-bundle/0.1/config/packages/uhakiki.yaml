@@ -13,3 +13,13 @@ uhakiki:
         #     taxonomy:
         #         confirm: { label: Water point, children: [in use, abandoned] }
         #         reject:  { label: Not a water point, children: [rock outcrop, building] }
+
+# Dev-only tooling (uhakiki:seed:*) is registered only outside production —
+# same shape as framework.test being flipped on by when@test.
+when@dev:
+    uhakiki:
+        dev_tools: true
+
+when@test:
+    uhakiki:
+        dev_tools: true
