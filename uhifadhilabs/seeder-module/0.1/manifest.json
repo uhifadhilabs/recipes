@@ -1,0 +1,19 @@
+{
+    "bundles": {
+        "UhifadhiLabs\\Seeder\\UhifadhiLabsSeederBundle": [
+            "all"
+        ]
+    },
+    "copy-from-recipe": {
+        "config/": "%CONFIG_DIR%/"
+    },
+    "env": {
+        "#1": "Demo-account passwords (the seeder refuses these placeholders - set real",
+        "#2": "values in .env.local). The Super Admin (impersonation) gets its own.",
+        "DEMO_PASSWORD": "changeme-in-env-local",
+        "DEMO_SUPER_ADMIN_PASSWORD": "changeme-in-env-local",
+        "#3": "Domain of the generated demo-account emails (override in .env.local to keep",
+        "#4": "deployment-specific logins working, e.g. your prod domain).",
+        "SEEDER_EMAIL_DOMAIN": "uhifadhi.test"
+    }
+}
