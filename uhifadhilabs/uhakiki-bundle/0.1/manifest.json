@@ -6,6 +6,6 @@
         "config/": "%CONFIG_DIR%/"
     },
     "env": {
-        "UHAKIKI_GOOGLE_MAPS_API_KEY": ""
+        "UHIFADHI_GOOGLE_MAPS_API_KEY": ""
     }
 }
