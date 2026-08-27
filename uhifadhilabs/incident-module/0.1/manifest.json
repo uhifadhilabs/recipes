@@ -1,0 +1,8 @@
+{
+    "bundles": {
+        "UhifadhiLabs\\Incident\\UhifadhiLabsIncidentBundle": ["all"]
+    },
+    "copy-from-recipe": {
+        "config/": "%CONFIG_DIR%/"
+    }
+}
