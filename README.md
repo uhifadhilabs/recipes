@@ -46,3 +46,11 @@ A module missing that keyword therefore has its `controllers.json` entries
 silently deleted by the next `composer update`, however carefully they were
 added by hand. The fix belongs in the module, not here: add `symfony-ux` to its
 `keywords` and ship `assets/package.json` with a `symfony.controllers` map.
+
+## License
+
+MIT — see [LICENSE](LICENSE). Recipes are configuration a host copies into its
+own project, so the permissive licence the Symfony recipes repositories use is
+the right one here: the modules themselves carry their own licences, and
+nothing about installing one should be encumbered by the terms of the file that
+wired it up.
