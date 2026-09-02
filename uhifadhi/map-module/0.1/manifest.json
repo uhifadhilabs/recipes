@@ -1,0 +1,16 @@
+{
+    "bundles": {
+        "UhifadhiLabs\\Map\\UhifadhiLabsMapBundle": ["all"]
+    },
+    "copy-from-recipe": {
+        "config/": "%CONFIG_DIR%/"
+    },
+    "env": {
+        "#1": "Satellite imagery key, used only when a deployment sets the satellite",
+        "#2": "provider to google (see config/packages/map.yaml). Unset is a valid state:",
+        "#3": "the bundle draws keyless Esri World Imagery and asks nobody. Public by",
+        "#4": "nature - it travels inside every tile URL - so restrict it by HTTP referrer",
+        "#5": "at Google rather than treating it as a secret.",
+        "UHIFADHI_GOOGLE_MAPS_API_KEY": ""
+    }
+}
