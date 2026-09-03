@@ -1,3 +1,0 @@
-uhakiki:
-    resource: '@UhifadhiLabsUhakikiBundle/src/Controller/'
-    type: attribute

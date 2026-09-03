@@ -7,10 +7,7 @@ generated into the `flex/main` branch by the GitHub Action on every push to
 
 Recipes are keyed by **composer package name**, which is why the directories
 here are `uhifadhi/…` while the repository itself lives under the `uhifadhilabs`
-GitHub organisation. The one exception is `uhifadhilabs/uhakiki-bundle`, which
-still publishes under the old vendor and therefore keeps its old directory: a
-recipe directory that does not match its package name is a recipe Flex will
-never find.
+GitHub organisation.
 
 ## Use in an app
 
