@@ -1,37 +1,46 @@
-# Security — written by uhifadhi/team-module's recipe, and OWNED BY YOU.
+# Security, wired to uhifadhi/team-module — written by its recipe, OWNED BY YOU.
 #
-# WHY A BUNDLE WROTE YOUR SECURITY CONFIG. Firewalls and access_control are
-# application configuration by Symfony's own design: only this project knows
+# WHY A BUNDLE WROTE YOUR SECURITY CONFIG AT ALL. Firewalls and access_control
+# are application configuration by Symfony's own design: only this project knows
 # which of its paths are public. A bundle cannot decide that, and one that tried
 # would be a bundle every installation had to fight. What a bundle CAN do is
-# hand you a correct starting point wired to the identity it ships — which is
-# what this file is. There is no separate security module and there is nothing
-# for one to hold.
+# hand you a correct starting point wired to the identity it ships. That is this
+# file. There is no separate security module and there is nothing for one to
+# hold.
 #
-# EVERY LINE HERE IS YOURS TO CHANGE. The team module keeps working if you
-# rename the firewall, tighten access_control, drop remember-me or add a second
-# provider. Two things it does depend on:
+# WHY IT IS NOT `security.yaml`, WHICH IS WHERE YOU EXPECT IT. That filename
+# already belongs to symfony/security-bundle's own recipe, and Symfony Flex
+# refuses to let one recipe overwrite another recipe's file — silently on
+# install, and even under `composer recipes:install … --force`. A recipe that
+# shipped `security.yaml` would therefore ship nothing at all: you would install
+# team-module, get the stock in-memory provider, and find out at your first
+# sign-in attempt. So the settings arrive in a file of their own.
+#
+# HOW THE TWO FILES ADD UP. Symfony loads every `config/packages/*.yaml` and
+# merges them into one `security` configuration, in filename order — so this
+# file is read AFTER `security.yaml` and wins wherever the two disagree. What
+# that means concretely:
+#
+#   * `firewalls.main.provider` here replaces the stock `users_in_memory`.
+#   * `providers.users_in_memory` in security.yaml is now unused. Delete it, and
+#     with it the comment above it — it is the stock placeholder for an
+#     application that has no user storage, and you have one.
+#   * everything else in security.yaml (the `dev` firewall, the hasher, the
+#     when@test cost floor) is still yours and still applies.
+#
+# You may of course move all of this into `security.yaml` by hand and delete
+# this file. Nothing in the module reads the filename; what the module depends
+# on is only:
 #
 #   1. a provider that resolves Uhifadhi\Team\Entity\User, and
 #   2. the route names `team_login` / `team_logout` (config/routes/team.yaml).
 #
 # Break either and the container says so at compile time rather than at 3am.
-#
-# `composer recipes:install uhifadhi/team-module --force` overwrites this file
-# with the version above. Keep your own additions as ONE CONTIGUOUS BLOCK at the
-# bottom, under a marker line — then restoring them after a --force is one hunk
-# rather than an archaeology exercise.
 security:
-    # Hashing is a framework concern, not a team-module one: the interface named
-    # here is Symfony's, and "auto" is the framework picking the best algorithm
-    # available. Every user this module stores implements it.
-    password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-
     # The staff accounts, looked up by email. `property: email` is what makes
     # `_username` on the sign-in form an email address; the module also stores a
     # `ranger_code` for the field app, which is a DIFFERENT identifier resolved
-    # by the API that uses it, not by this provider.
+    # by whatever API uses it, not by this provider.
     providers:
         team_user_provider:
             entity:
@@ -39,22 +48,16 @@ security:
                 property: email
 
     firewalls:
-        # The toolbar, the profiler and the asset server. `security: false`
-        # rather than a public rule: these paths must not be authenticated at
-        # all, and in prod they do not exist.
-        dev:
-            pattern: ^/(_profiler|_wdt|assets|build)/
-            security: false
-
         main:
-            lazy: true
+            # Replaces the stock `users_in_memory` (see the header).
             provider: team_user_provider
 
-            # THE AUTHENTICATION ITSELF. Both paths are the same route, which is
-            # what makes a failed sign-in re-render the form with its error
-            # rather than bouncing through a second URL. The field names the
-            # module's template uses (`_username`, `_password`, `_csrf_token`)
-            # are this key's defaults.
+            # THE AUTHENTICATION ITSELF, and it is not in any controller: this
+            # key is what intercepts the POST to /login. Both paths are the same
+            # route, which is what makes a failed sign-in re-render the form
+            # with its error rather than bouncing through a second URL. The
+            # field names the module's template uses (`_username`, `_password`,
+            # `_csrf_token`) are this key's defaults.
             form_login:
                 login_path: team_login
                 check_path: team_login
@@ -111,15 +114,3 @@ security:
         - { path: ^/login, roles: PUBLIC_ACCESS }
         #- { path: ^/areas, roles: ROLE_AREAS }      # the umbrella; the verb is the voter's
         #- { path: ^/, roles: ROLE_USER }            # sign in to see anything at all
-
-# Hashing is expensive by design. In tests that cost buys nothing, so it is
-# floored — the documented Symfony practice, and safe because it applies to no
-# other environment.
-when@test:
-    security:
-        password_hashers:
-            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
-                algorithm: auto
-                cost: 4 # lowest possible for bcrypt
-                time_cost: 3 # lowest possible for argon
-                memory_cost: 10 # lowest possible for argon
