@@ -1,7 +1,7 @@
 # uhifadhilabs recipes
 
 Private [Symfony Flex](https://github.com/symfony/recipes) recipe endpoint for
-the uhifadhi module bundles. Not a server: the endpoint is static JSON
+the uhifadhi modules. Not a server: the endpoint is static JSON
 generated into the `flex/main` branch by the GitHub Action on every push to
 `main`.
 
