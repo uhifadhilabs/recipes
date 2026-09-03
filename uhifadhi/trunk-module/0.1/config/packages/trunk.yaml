@@ -44,13 +44,13 @@ when@test:
 # because the per-area table has nothing to point at.
 #
 # When you have an area model, make it implement
-# UhifadhiLabs\Trunk\Area\AreaInterface (it asks for getId() and nothing else)
+# UhifadhiLabs\Trunk\Entity\AreaInterface (it asks for getId() and nothing else)
 # and add:
 #
 #   doctrine:
 #       orm:
 #           resolve_target_entities:
-#               UhifadhiLabs\Trunk\Area\AreaInterface: App\Entity\AreaOfInterest
+#               UhifadhiLabs\Trunk\Entity\AreaInterface: App\Entity\AreaOfInterest
 #
 # Then run `bin/console trunk:catalogue:seed` and every area is backfilled with
 # the modules it has no row for — including areas created between two deploys.
