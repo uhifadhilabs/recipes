@@ -1,6 +1,0 @@
-  * Add the map platform's three importmap entries to <fg=green>importmap.php</> — bare
-    specifiers every map importer uses, which Flex cannot write into a PHP file:
-
-        'uhifadhi/basemaps'   => ['path' => '@uhifadhi/map-module/basemaps.js'],
-        'uhifadhi/boundary'   => ['path' => '@uhifadhi/map-module/boundary.js'],
-        'uhifadhi/map-chrome' => ['path' => '@uhifadhi/map-module/chrome.js'],

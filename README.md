@@ -49,30 +49,12 @@ and prints "use `git diff` … `git checkout -p`". If the host's additions are
 interleaved with the recipe's text, that review is an archaeology exercise; if
 they are one contiguous block at the bottom, restoring them is one hunk.
 
-## post-install.txt: hand-steps only
+## What a recipe must NOT try to do: assets/controllers.json
 
-A recipe may ship a `post-install.txt`, printed by Flex under the package's name
-after `composer require`. The rule here is narrower than Symfony's own:
-
-**It exists only when the module has a required hand-step, and it contains only
-that hand-step.** Not a list of the files the recipe wrote — `git diff` shows
-those, and `composer recipes <pkg>` shows which file belongs to which recipe. Not
-a tour of the module's features; the module's README is where those live.
-
-The reason is arithmetic. An installation with five modules prints five blocks,
-one after another, in a terminal somebody is reading for the first time. Every
-line that is not something they must do makes the lines that are less likely to
-be read. A module with nothing for the operator to do ships no post-install.txt
-at all.
-
-Format follows the Symfony recipes: bullets starting with `*`, `<fg=green>` for
-paths and code, short.
-
-## Two things Flex does that a recipe must not try to
-
-**`assets/controllers.json`.** Flex synchronises it from each installed package's
-own `assets/package.json`, on every `composer require`/`update`, and it rewrites
-the file wholesale from the packages it finds. It only looks at a package that
+Stimulus controllers are not recipe business. Flex synchronises
+`assets/controllers.json` from each installed package's own
+`assets/package.json`, on every `composer require`/`update`, and it rewrites the
+file wholesale from the packages it finds. It only looks at a package that
 declares the **`symfony-ux` keyword in its `composer.json`** (see
 `Symfony\Flex\PackageJsonSynchronizer::resolvePackageJson`).
 
@@ -81,11 +63,11 @@ silently deleted by the next `composer update`, however carefully they were
 added by hand. The fix belongs in the module, not here: add `symfony-ux` to its
 `keywords` and ship `assets/package.json` with a `symfony.controllers` map.
 
-**`importmap.php`.** The same file's `symfony.importmap` block is read the same
-way, and Flex runs `importmap:require` for each entry — including path entries
-pointing into the package's own AssetMapper namespace. A module whose JavaScript
-is imported by bare specifier can therefore declare those specifiers itself
-instead of asking the host to hand-edit `importmap.php`.
+The same file's `symfony.importmap` block is read the same way, and Flex runs
+`importmap:require` for each entry — including path entries pointing into the
+package's own AssetMapper namespace. A module whose JavaScript is imported by
+bare specifier can declare those specifiers there instead of asking the host to
+hand-edit `importmap.php`.
 
 ## License
 
