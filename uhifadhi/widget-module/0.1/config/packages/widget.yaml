@@ -52,8 +52,15 @@
 # the stock Symfony root, which the doctrine-bundle recipe's own prefix already
 # covers.
 #
-# Write it ONCE. Every module that points at a person resolves through the same
-# line, and a module installed later needs nothing further.
+# MERGE IT INTO THE BLOCK ALREADY THERE. config/packages/doctrine.yaml opens
+# with `doctrine:`, and a second `doctrine:` key in the same file is not valid
+# YAML — Symfony refuses to boot with `Duplicate key "doctrine" detected`. The
+# `resolve_target_entities` key goes under the `orm:` that is already in that
+# file, beside `mappings`.
+#
+# Write it ONCE. resolve_target_entities is one map, so the seam's AreaInterface
+# line and this one sit side by side under it, and a module installed later that
+# points at a person needs nothing further.
 #
 # THEN, in this order:
 #
