@@ -24,19 +24,31 @@
 map:
     module_category: operations
 
-# THE THREE IMPORTMAP LINES THIS RECIPE CANNOT WRITE.
+# THE THREE IMPORTMAP LINES, WRITTEN FOR YOU — BUT NOT BY THIS RECIPE.
 #
 # The bundle registers its own assets/ directory under the AssetMapper
-# namespace @uhifadhi/map-module, but importmap entries are read from the
-# host's single importmap.php and AssetMapper offers no extension point for a
-# bundle to contribute to it. Flex cannot patch a PHP file, so until Symfony
-# supports bundle importmap contributions these three lines are added BY HAND
-# to importmap.php:
+# namespace @uhifadhi/map-module, and importmap entries are read from the
+# host's single importmap.php. A recipe cannot write them: recipes copy files
+# and patch YAML, and importmap.php is PHP.
 #
-#   'uhifadhi/basemaps'   => ['path' => '@uhifadhi/map-module/basemaps.js'],
-#   'uhifadhi/boundary'   => ['path' => '@uhifadhi/map-module/boundary.js'],
-#   'uhifadhi/map-chrome' => ['path' => '@uhifadhi/map-module/chrome.js'],
+# Flex can, and does. uhifadhi/map-module declares the entries itself, in its
+# assets/package.json under symfony.importmap, and Flex runs importmap:require
+# once per entry on install — the same mechanism symfony/stimulus-bundle uses
+# for its loader. Nothing is added by hand any more. What lands in
+# importmap.php is:
 #
-# They are bare specifiers on purpose: every importer — the host's own map
+#   'uhifadhi/basemaps'   => ['path' => './vendor/uhifadhi/map-module/assets/basemaps.js'],
+#   'uhifadhi/boundary'   => ['path' => './vendor/uhifadhi/map-module/assets/boundary.js'],
+#   'uhifadhi/map-chrome' => ['path' => './vendor/uhifadhi/map-module/assets/chrome.js'],
+#
+# (The vendor-relative path is what importmap:require stores; the logical path
+# @uhifadhi/map-module/basemaps.js names the same file and is equally valid if
+# you ever write one by hand.)
+#
+# It needs the host to HAVE an importmap.php — a host running AssetMapper. A
+# host that installed the bundle for the Leaflet build alone has nothing to
+# write into and gets nothing written, which is correct.
+#
+# The keys are bare specifiers on purpose: every importer — the host's own map
 # controllers and each module's map — imports the NAME, never the path, so the
 # files can move underneath them without touching a single import site.

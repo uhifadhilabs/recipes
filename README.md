@@ -69,6 +69,14 @@ package's own AssetMapper namespace. A module whose JavaScript is imported by
 bare specifier can declare those specifiers there instead of asking the host to
 hand-edit `importmap.php`.
 
+`uhifadhi/map-module` does exactly that, for `uhifadhi/basemaps`,
+`uhifadhi/boundary` and `uhifadhi/map-chrome`. Its recipe's `map.yaml` therefore
+documents the three lines without shipping them: they arrive from the package,
+not from here. That is the general rule — **anything that has to end up in
+`importmap.php` belongs in the module's `assets/package.json`, never in a
+recipe** — and it applies to hosts running AssetMapper, which is the only kind
+of host that has an `importmap.php` for Flex to write into.
+
 ## License
 
 MIT — see [LICENSE](LICENSE). Recipes are configuration a host copies into its
