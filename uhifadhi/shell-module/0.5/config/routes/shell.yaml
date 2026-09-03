@@ -1,0 +1,16 @@
+# The shell's routes (uhifadhi/shell-module) — one line, and it is yours.
+#
+# The shell ships one route: the welcome page, named `welcome`, at `/` — the one
+# screen a fresh installation has before it has grown one of its own. The bundle
+# DEFINES it and loads it nowhere. This import is what makes it reachable, and
+# this file belongs to YOUR application.
+#
+# THAT IS THE WHOLE OF THE SHELL'S CLAIM ON A URL, and withdrawing it is one
+# edit. The day this installation has a real home screen, point `/` at it here —
+# or delete this file and let whichever module owns the front door claim the
+# address. Nothing in the shell depends on the route name or on the route
+# existing; nothing is left behind.
+#
+# `debug:router` shows what you are replacing.
+shell:
+    resource: '@UhifadhiShellBundle/config/routes/welcome.php'
