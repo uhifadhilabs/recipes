@@ -74,7 +74,7 @@ hand-edit `importmap.php`.
 documents the three lines without shipping them: they arrive from the package,
 not from here. That is the general rule — **anything that has to end up in
 `importmap.php` belongs in the module's `assets/package.json`, never in a
-recipe** — and it applies to hosts running AssetMapper, which is the only kind
+recipe** — and it applies to installations running AssetMapper, which is the only kind
 of host that has an `importmap.php` for Flex to write into.
 
 ## License
