@@ -1,6 +1,6 @@
 {
     "bundles": {
-        "Uhifadhi\\Trunk\\UhifadhiTrunkBundle": ["all"]
+        "Uhifadhi\\Seam\\UhifadhiSeamBundle": ["all"]
     },
     "copy-from-recipe": {
         "config/": "%CONFIG_DIR%/"

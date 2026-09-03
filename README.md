@@ -32,7 +32,7 @@ named `#1`, `#2`, … become comment lines, in order).
 
 ## The host's half of a recipe-owned file
 
-Some recipes ship a config file whose last word cannot be theirs — the trunk's
+Some recipes ship a config file whose last word cannot be theirs — the seam's
 `resolve_target_entities` needs the name of an entity only the host has, and
 the map's satellite provider needs a key only one deployment holds. In both
 cases the recipe ships the **instruction as a comment** and the host follows it.
