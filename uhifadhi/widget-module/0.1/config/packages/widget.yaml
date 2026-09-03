@@ -1,0 +1,72 @@
+# Widget (uhifadhi/widget-module) — the dashboard machinery: the registry
+# modules declare their surfaces into, the layouts each person adopted, and the
+# library component that arranges them.
+#
+# THERE IS NOTHING TO CONFIGURE, and that is why this file has no `widget:` key.
+# Which widgets a dashboard ships, what they are called, which headed section
+# the library files them under and how wide each may sit are the DECLARING
+# MODULE's to say — a module writes a WidgetSurfaceInterface and tags it. A
+# second place to say the same things would be a second place for the two to
+# disagree, and a key here would be that second place.
+#
+# THE BUNDLE ALSO NEEDS NO DOCTRINE BLOCK. It maps its own entities, so
+# `widget_preference` and `widget_custom_preset` arrive without a mappings key
+# in this project.
+#
+# WHAT THIS FILE IS FOR is the one line below, which the recipe cannot write for
+# you.
+
+# THE ONE LINE THIS RECIPE CANNOT WRITE — and it is REQUIRED, not an extra you
+# add later.
+#
+# A stored layout belongs to a PERSON, and the accounts of an installation are
+# not this bundle's. So the bundle maps that association to an interface that
+# uhifadhi/module-contracts publishes, and you resolve the interface to your own
+# class. A recipe has no way to know what you call your people, or whether you
+# have an account class yet.
+#
+# HOW FAR YOU GET WITHOUT IT — honestly. The bundle installs, the container
+# compiles, and the kernel boots. What you CANNOT do is touch the schema.
+# Anything that walks the metadata — `doctrine:schema:create`,
+# `doctrine:schema:update`, `doctrine:migrations:diff` — stops on the unresolved
+# interface:
+#
+#   In MappingException.php line 72:
+#     Class 'Uhifadhi\ModuleContracts\Entity\UserInterface' does not exist
+#
+# That is not a bug to route around. Both tables carry a NOT NULL foreign key to
+# a person; a layout with no owner is not half a layout.
+#
+# THE STEP, IN FULL. If you installed uhifadhi/team-module, its
+# `Uhifadhi\Team\Entity\User` answers the contract already and you name that:
+#
+#   doctrine:
+#       orm:
+#           resolve_target_entities:
+#               Uhifadhi\ModuleContracts\Entity\UserInterface: Uhifadhi\Team\Entity\User
+#
+# An installation with an account class of its own names that instead. It has to
+# answer the contract's seven questions — getId, getUuidString, getEmail,
+# getFirstName, getLastName, getFullName, getRangerCode — and be in the mapping
+# chain; a project created from the uhifadhi skeleton keeps its entities under
+# the stock Symfony root, which the doctrine-bundle recipe's own prefix already
+# covers.
+#
+# Write it ONCE. Every module that points at a person resolves through the same
+# line, and a module installed later needs nothing further.
+#
+# THEN, in this order:
+#
+#   bin/console doctrine:migrations:diff      # your history, your migration
+#   bin/console doctrine:migrations:migrate
+#
+# The bundle ships entities, not migrations: the tables are the bundle's, but the
+# migration history is yours, and a vendor replaying its own versions into it
+# would fight every `diff` you ever run.
+#
+# UNINSTALLING A MODULE LEAVES ITS LAYOUTS BEHIND, on purpose. Rows are keyed by
+# a surface string, nothing reads a surface no module claims, and reinstalling
+# gives everybody the dashboard they had. Deliberate cleanup is a command you
+# run, never something that happens to you:
+#
+#   bin/console widget:prune --dry-run
