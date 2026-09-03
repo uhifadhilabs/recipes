@@ -91,12 +91,16 @@ security:
             #    max_attempts: 5
 
     # THE TIER LADDER, and it is not a permission tree. Admin and above hold the
-    # umbrella capability roles; Manager grants NO umbrella by tier, because a
-    # Manager's capabilities come from their assigned position exactly as a
+    # two umbrella capability roles; Manager grants NO umbrella by tier, because
+    # a Manager's capabilities come from their assigned position exactly as a
     # Staff user's do. The granular leaves (area.create, module.view, …) are
     # never listed here — they are decided by the module's voter.
+    #
+    # THERE ARE TWO UMBRELLAS AND THERE IS NO ROLE_INGESTION. If you are looking
+    # at an older installation that has one, delete it: the permission it
+    # covered is gone from the catalogue, so the role guards nothing.
     role_hierarchy:
-        ROLE_ADMIN: [ROLE_MANAGER, ROLE_AREAS, ROLE_INGESTION, ROLE_MODULES]
+        ROLE_ADMIN: [ROLE_MANAGER, ROLE_AREAS, ROLE_MODULES]
         ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     # ONLY THE FIRST MATCHING RULE APPLIES.
