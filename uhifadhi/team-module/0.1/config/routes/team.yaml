@@ -1,0 +1,12 @@
+# The two addresses uhifadhi/team-module owns: /login and /logout.
+#
+# A MODULE MAY SHIP ROUTES — only the shell may not. The controller carries its
+# own #[Route] attributes; this file is where your application mounts them, and
+# it is yours: prefix them, restrict them, or point somewhere else entirely.
+#
+# THE ROUTE NAMES MATTER. `config/packages/security.yaml` names `team_login` and
+# `team_logout` in its form_login and logout keys, so if you drop this file the
+# firewall has nothing to point at and the container will say so at compile time.
+team:
+    resource: '@UhifadhiTeamBundle/src/Controller/'
+    type: attribute

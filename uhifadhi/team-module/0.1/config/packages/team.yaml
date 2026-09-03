@@ -1,0 +1,25 @@
+# Team (uhifadhi/team-module) — who this installation's people are and how they
+# sign in.
+#
+# TWO KEYS, AND NEITHER OF THEM IS SECURITY. What a deployment usually wants to
+# change about signing in — who may reach what, how long a session lives,
+# whether there is a remember-me cookie, how hard passwords are hashed — is not
+# here and cannot be: it is `config/packages/security.yaml`, which this bundle's
+# recipe also wrote and which belongs to YOU. Firewalls and access_control are
+# application configuration by Symfony's own design.
+#
+# What IS here is the two things the SCREEN needs and a firewall has no opinion
+# about. The tree is closed, so an invented key fails loudly.
+team:
+    # Where a visitor who asks for /login while already signed in is sent.
+    #
+    # A PATH, NOT A ROUTE NAME. The bundle cannot know what you call your home
+    # screen, and a route name it guessed wrong would be a 500 at the exact
+    # moment somebody finally got their password right. Where a FRESH sign-in
+    # lands is a different setting and lives in the firewall
+    # (form_login.default_target_path).
+    after_sign_in_path: '/'
+
+    # The sentence under the mark on the sign-in card. Say who you are here
+    # rather than by patching a template out of the vendor tree.
+    sign_in_lede: 'Analytical observatory for protected areas. Sign in to reach this installation and its modules.'

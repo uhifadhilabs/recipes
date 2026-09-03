@@ -1,0 +1,125 @@
+# Security — written by uhifadhi/team-module's recipe, and OWNED BY YOU.
+#
+# WHY A BUNDLE WROTE YOUR SECURITY CONFIG. Firewalls and access_control are
+# application configuration by Symfony's own design: only this project knows
+# which of its paths are public. A bundle cannot decide that, and one that tried
+# would be a bundle every installation had to fight. What a bundle CAN do is
+# hand you a correct starting point wired to the identity it ships — which is
+# what this file is. There is no separate security module and there is nothing
+# for one to hold.
+#
+# EVERY LINE HERE IS YOURS TO CHANGE. The team module keeps working if you
+# rename the firewall, tighten access_control, drop remember-me or add a second
+# provider. Two things it does depend on:
+#
+#   1. a provider that resolves Uhifadhi\Team\Entity\User, and
+#   2. the route names `team_login` / `team_logout` (config/routes/team.yaml).
+#
+# Break either and the container says so at compile time rather than at 3am.
+#
+# `composer recipes:install uhifadhi/team-module --force` overwrites this file
+# with the version above. Keep your own additions as ONE CONTIGUOUS BLOCK at the
+# bottom, under a marker line — then restoring them after a --force is one hunk
+# rather than an archaeology exercise.
+security:
+    # Hashing is a framework concern, not a team-module one: the interface named
+    # here is Symfony's, and "auto" is the framework picking the best algorithm
+    # available. Every user this module stores implements it.
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    # The staff accounts, looked up by email. `property: email` is what makes
+    # `_username` on the sign-in form an email address; the module also stores a
+    # `ranger_code` for the field app, which is a DIFFERENT identifier resolved
+    # by the API that uses it, not by this provider.
+    providers:
+        team_user_provider:
+            entity:
+                class: Uhifadhi\Team\Entity\User
+                property: email
+
+    firewalls:
+        # The toolbar, the profiler and the asset server. `security: false`
+        # rather than a public rule: these paths must not be authenticated at
+        # all, and in prod they do not exist.
+        dev:
+            pattern: ^/(_profiler|_wdt|assets|build)/
+            security: false
+
+        main:
+            lazy: true
+            provider: team_user_provider
+
+            # THE AUTHENTICATION ITSELF. Both paths are the same route, which is
+            # what makes a failed sign-in re-render the form with its error
+            # rather than bouncing through a second URL. The field names the
+            # module's template uses (`_username`, `_password`, `_csrf_token`)
+            # are this key's defaults.
+            form_login:
+                login_path: team_login
+                check_path: team_login
+                enable_csrf: true
+                # Where a FRESH sign-in lands — as distinct from team.yaml's
+                # `after_sign_in_path`, which only covers somebody already
+                # signed in who asks for /login again. Point this at your home
+                # screen the day you have one.
+                default_target_path: '/'
+
+            # The checkbox on the sign-in card is wired to this. Delete the key
+            # and the box is simply ignored — the card still works.
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800 # one week
+                always_remember_me: false
+
+            logout:
+                path: team_logout
+                target: team_login
+
+            # Super Admin impersonation. The tier grants ROLE_ALLOWED_TO_SWITCH
+            # (see the hierarchy below), so no other tier can reach it.
+            switch_user: true
+
+            # BLUNTING CREDENTIAL STUFFING — commented out because it needs a
+            # package this installation may not have. Run
+            # `composer require symfony/rate-limiter` and uncomment; five
+            # attempts a minute per IP is the module's recommendation.
+            #login_throttling:
+            #    max_attempts: 5
+
+    # THE TIER LADDER, and it is not a permission tree. Admin and above hold the
+    # umbrella capability roles; Manager grants NO umbrella by tier, because a
+    # Manager's capabilities come from their assigned position exactly as a
+    # Staff user's do. The granular leaves (area.create, module.view, …) are
+    # never listed here — they are decided by the module's voter.
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_MANAGER, ROLE_AREAS, ROLE_INGESTION, ROLE_MODULES]
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+    # ONLY THE FIRST MATCHING RULE APPLIES.
+    #
+    # THIS LADDER IS DELIBERATELY OPEN, and it is the first thing you should
+    # change. A recipe that shut an installation's front door would lock every
+    # existing page of every module already installed, on the `composer require`
+    # that added identity — so the rule shipped here is the one that changes
+    # nothing: /login is public, and everything else stays exactly as reachable
+    # as it was before this bundle arrived.
+    #
+    # Closing it is one line, and the commented block below is the shape most
+    # deployments end up with.
+    access_control:
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        #- { path: ^/areas, roles: ROLE_AREAS }      # the umbrella; the verb is the voter's
+        #- { path: ^/, roles: ROLE_USER }            # sign in to see anything at all
+
+# Hashing is expensive by design. In tests that cost buys nothing, so it is
+# floored — the documented Symfony practice, and safe because it applies to no
+# other environment.
+when@test:
+    security:
+        password_hashers:
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4 # lowest possible for bcrypt
+                time_cost: 3 # lowest possible for argon
+                memory_cost: 10 # lowest possible for argon
