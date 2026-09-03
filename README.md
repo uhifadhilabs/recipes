@@ -30,6 +30,25 @@ registration (`bundles`), the module's `config/packages/<alias>.yaml` and
 `copy-from-recipe`), and any `.env` block the module documents (`env`; keys
 named `#1`, `#2`, … become comment lines, in order).
 
+## The host's half of a recipe-owned file
+
+Some recipes ship a config file whose last word cannot be theirs — the trunk's
+`resolve_target_entities` needs the name of an entity only the host has, and
+the map's satellite provider needs a key only one deployment holds. In both
+cases the recipe ships the **instruction as a comment** and the host follows it.
+
+The rule that keeps that reconcilable: **a recipe-owned file in a host is the
+recipe's bytes verbatim, followed by exactly the blocks the recipe's own
+comments told the host to add, under a marker line that says so.** Nothing is
+edited in place, nothing is deleted, and one deployment's circumstances never
+leak upward into the recipe every other installation gets.
+
+The reason is mechanical. `composer recipes:install <pkg> --force` overwrites
+recipe-owned files with the recipe's version — that is what the flag is for —
+and prints "use `git diff` … `git checkout -p`". If the host's additions are
+interleaved with the recipe's text, that review is an archaeology exercise; if
+they are one contiguous block at the bottom, restoring them is one hunk.
+
 ## What a recipe must NOT try to do: assets/controllers.json
 
 Stimulus controllers are not recipe business. Flex synchronises

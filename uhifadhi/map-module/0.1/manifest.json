@@ -10,7 +10,9 @@
         "#2": "provider to google (see config/packages/map.yaml). Unset is a valid state:",
         "#3": "the bundle draws keyless Esri World Imagery and asks nobody. Public by",
         "#4": "nature - it travels inside every tile URL - so restrict it by HTTP referrer",
-        "#5": "at Google rather than treating it as a secret.",
+        "#5": "at Google rather than treating it as a secret. A missing key must never",
+        "#6": "break a map, and it does not.",
+        "#7": "https://developers.google.com/maps/documentation/tile/session_tokens",
         "UHIFADHI_GOOGLE_MAPS_API_KEY": ""
     }
 }
