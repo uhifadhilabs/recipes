@@ -1,6 +1,6 @@
 {
     "bundles": {
-        "UhifadhiLabs\\Map\\UhifadhiLabsMapBundle": ["all"]
+        "Uhifadhi\\Map\\UhifadhiMapBundle": ["all"]
     },
     "copy-from-recipe": {
         "config/": "%CONFIG_DIR%/"

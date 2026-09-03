@@ -1,6 +1,6 @@
 {
     "bundles": {
-        "UhifadhiLabs\\Fixtures\\UhifadhiLabsFixturesBundle": [
+        "Uhifadhi\\Fixtures\\UhifadhiFixturesBundle": [
             "all"
         ]
     },

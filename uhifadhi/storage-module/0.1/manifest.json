@@ -1,6 +1,6 @@
 {
     "bundles": {
-        "UhifadhiLabs\\Storage\\UhifadhiLabsStorageBundle": ["all"]
+        "Uhifadhi\\Storage\\UhifadhiStorageBundle": ["all"]
     },
     "copy-from-recipe": {
         "config/": "%CONFIG_DIR%/"
