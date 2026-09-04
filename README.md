@@ -50,10 +50,17 @@ A file hand-committed into the skeleton without that command is the same bug.
 
 ## The host's half of a recipe-owned file
 
-Some recipes ship a config file whose last word cannot be theirs — the seam's
-`resolve_target_entities` needs the name of an entity only the host has, and
-the map's satellite provider needs a key only one deployment holds. In both
-cases the recipe ships the **instruction as a comment** and the host follows it.
+Some recipes ship a config file whose last word cannot be theirs — the map's
+satellite provider needs a key only one deployment holds. There the recipe ships
+the **instruction as a comment** and the host follows it.
+
+Ask first whether it really cannot be theirs. **Whoever knows the answer states
+the resolution**: the seam's `resolve_target_entities` block used to live here as
+a comment for the host to uncomment, and it is gone — the package that provides
+an area (`uhifadhi/area-module`) prepends it, exactly as `uhifadhi/team-module`
+prepends the answer to the user contract, and an installation now writes neither.
+A comment telling a host to paste a line that only ever had one right value is a
+design that has not finished.
 
 The rule that keeps that reconcilable: **a recipe-owned file in a host is the
 recipe's bytes verbatim, followed by exactly the blocks the recipe's own
