@@ -37,20 +37,33 @@
 # That is not a bug to route around. Both tables carry a NOT NULL foreign key to
 # a person; a layout with no owner is not half a layout.
 #
-# THE STEP, IN FULL. If you installed uhifadhi/team-module, its
-# `Uhifadhi\Team\Entity\User` answers the contract already and you name that:
+# IF YOU INSTALLED uhifadhi/team-module THERE IS NOTHING TO DO. Team provides the
+# account class, so team states the resolution from its own bundle (0.3.2 and
+# later) and this whole step is already answered:
 #
 #   doctrine:
 #       orm:
 #           resolve_target_entities:
 #               Uhifadhi\ModuleContracts\Entity\UserInterface: Uhifadhi\Team\Entity\User
 #
-# An installation with an account class of its own names that instead. It has to
-# answer the contract's seven questions — getId, getUuidString, getEmail,
-# getFirstName, getLastName, getFullName, getRangerCode — and be in the mapping
-# chain; a project created from the uhifadhi skeleton keeps its entities under
-# the stock Symfony root, which the doctrine-bundle recipe's own prefix already
-# covers.
+# You do not write that. It is here so you can recognise it in `debug:config
+# doctrine` and know where it came from.
+#
+# OTHERWISE — no team, or an account class of your own — IT IS YOURS, and it is
+# one line naming your class instead. It has to answer the contract's seven
+# questions — getId, getUuidString, getEmail, getFirstName, getLastName,
+# getFullName, getRangerCode — and be in the mapping chain; a project created
+# from the uhifadhi skeleton keeps its entities under the stock Symfony root,
+# which the doctrine-bundle recipe's own prefix already covers.
+#
+#   doctrine:
+#       orm:
+#           resolve_target_entities:
+#               Uhifadhi\ModuleContracts\Entity\UserInterface: App\Entity\Person
+#
+# YOUR ANSWER WINS EVEN WITH TEAM INSTALLED. Team's is prepended, and prepended
+# configuration loses to the application's — so naming your own class is all it
+# takes, and there is nothing to disable first.
 #
 # MERGE IT INTO THE BLOCK ALREADY THERE. config/packages/doctrine.yaml opens
 # with `doctrine:`, and a second `doctrine:` key in the same file is not valid
@@ -60,7 +73,10 @@
 #
 # Write it ONCE. resolve_target_entities is one map, so the seam's AreaInterface
 # line and this one sit side by side under it, and a module installed later that
-# points at a person needs nothing further.
+# points at a person needs nothing further. The seam's line is ALWAYS yours:
+# only your installation knows what it calls an area, so no package can answer
+# that one for you — which is exactly the test for whether a step belongs to the
+# installation or to the package.
 #
 # THEN, in this order:
 #
