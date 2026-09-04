@@ -18,89 +18,17 @@ composer config extra.symfony.endpoint \
 
 Composer's GitHub token authenticates access to this private repo.
 
-## Add / update a recipe
+## Learn more
 
-Edit the files under `<vendor>/<package>/<version>/`, push to `main`; the
-Action regenerates `flex/main`. Recipe contents must stay client-agnostic
-(synthetic example domains only) — same rule as the bundles themselves.
-
-A recipe carries what a host would otherwise have to write by hand: the bundle
-registration (`bundles`), the module's `config/packages/<alias>.yaml` and
-`config/routes/<alias>.yaml` (shipped under the recipe's `config/` and copied by
-`copy-from-recipe`), and any `.env` block the module documents (`env`; keys
-named `#1`, `#2`, … become comment lines, in order).
-
-### Recipes the skeleton itself installs
-
-`uhifadhi/seam-module` and `uhifadhi/shell-module` are shipped by the skeleton
-([`uhifadhi/uhifadhi`](https://github.com/uhifadhilabs/uhifadhi)), so their
-recipes have a second half: the skeleton's `symfony.lock` records the recipe
-version, its hash and the files it tracks, and that ledger is what tells a fresh
-`create-project` there is nothing to update. Change one of those two recipes —
-editing bytes in place or adding a version — and re-sync the ledger in the
-skeleton:
-
-```bash
-composer recipes:update uhifadhi/seam-module
-```
-
-Skip it and every new installation is told "update available" on first boot,
-with nothing to apply, because the stored hash no longer matches the recipe.
-A file hand-committed into the skeleton without that command is the same bug.
-
-## The host's half of a recipe-owned file
-
-Some recipes ship a config file whose last word cannot be theirs — the map's
-satellite provider needs a key only one deployment holds. There the recipe ships
-the **instruction as a comment** and the host follows it.
-
-Ask first whether it really cannot be theirs. **Whoever knows the answer states
-the resolution**: the seam's `resolve_target_entities` block used to live here as
-a comment for the host to uncomment, and it is gone — the package that provides
-an area (`uhifadhi/area-module`) prepends it, exactly as `uhifadhi/team-module`
-prepends the answer to the user contract, and an installation now writes neither.
-A comment telling a host to paste a line that only ever had one right value is a
-design that has not finished.
-
-The rule that keeps that reconcilable: **a recipe-owned file in a host is the
-recipe's bytes verbatim, followed by exactly the blocks the recipe's own
-comments told the host to add, under a marker line that says so.** Nothing is
-edited in place, nothing is deleted, and one deployment's circumstances never
-leak upward into the recipe every other installation gets.
-
-The reason is mechanical. `composer recipes:install <pkg> --force` overwrites
-recipe-owned files with the recipe's version — that is what the flag is for —
-and prints "use `git diff` … `git checkout -p`". If the host's additions are
-interleaved with the recipe's text, that review is an archaeology exercise; if
-they are one contiguous block at the bottom, restoring them is one hunk.
-
-## What a recipe must NOT try to do: assets/controllers.json
-
-Stimulus controllers are not recipe business. Flex synchronises
-`assets/controllers.json` from each installed package's own
-`assets/package.json`, on every `composer require`/`update`, and it rewrites the
-file wholesale from the packages it finds. It only looks at a package that
-declares the **`symfony-ux` keyword in its `composer.json`** (see
-`Symfony\Flex\PackageJsonSynchronizer::resolvePackageJson`).
-
-A module missing that keyword therefore has its `controllers.json` entries
-silently deleted by the next `composer update`, however carefully they were
-added by hand. The fix belongs in the module, not here: add `symfony-ux` to its
-`keywords` and ship `assets/package.json` with a `symfony.controllers` map.
-
-The same file's `symfony.importmap` block is read the same way, and Flex runs
-`importmap:require` for each entry — including path entries pointing into the
-package's own AssetMapper namespace. A module whose JavaScript is imported by
-bare specifier can declare those specifiers there instead of asking the host to
-hand-edit `importmap.php`.
-
-`uhifadhi/map-module` does exactly that, for `uhifadhi/basemaps`,
-`uhifadhi/boundary` and `uhifadhi/map-chrome`. Its recipe's `map.yaml` therefore
-documents the three lines without shipping them: they arrive from the package,
-not from here. That is the general rule — **anything that has to end up in
-`importmap.php` belongs in the module's `assets/package.json`, never in a
-recipe** — and it applies to installations running AssetMapper, which is the only kind
-of host that has an `importmap.php` for Flex to write into.
+- [Add / update a recipe](docs/authoring-recipes.md) — where recipe files live,
+  what a recipe carries, and the ledger re-sync the two recipes the skeleton
+  ships with require.
+- [The host's half of a recipe-owned file](docs/recipe-owned-files.md) — when a
+  recipe ships an instruction instead of an answer, and the rule that keeps a
+  host's additions reconcilable with `recipes:install --force`.
+- [What a recipe must NOT try to do: assets/controllers.json](docs/stimulus-and-importmap.md)
+  — why Stimulus controllers and importmap entries belong in the module's
+  `assets/package.json`, never in a recipe.
 
 ## License
 
