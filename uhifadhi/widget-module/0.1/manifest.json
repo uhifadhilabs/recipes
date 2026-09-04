@@ -4,5 +4,20 @@
     },
     "copy-from-recipe": {
         "config/": "%CONFIG_DIR%/"
-    }
+    },
+    "add-lines": [
+        {
+            "file": "importmap.php",
+            "position": "after_target",
+            "target": "'app' => ['path' => './assets/app.js', 'entrypoint' => true],",
+            "content": "    '@uhifadhi/widget-module/widgets' => ['path' => '@uhifadhi/widget-module/widgets.js'],",
+            "warn_if_missing": true
+        },
+        {
+            "file": "assets/app.js",
+            "position": "bottom",
+            "content": "\n// The widget library's behaviour: previewing a preset, filtering the picker\n// and composing a dashboard. Importing it is the whole contract — it arms\n// itself on a page that carries a library and costs one querySelector on a\n// page that does not.\nimport '@uhifadhi/widget-module/widgets';",
+            "warn_if_missing": true
+        }
+    ]
 }
