@@ -6,7 +6,7 @@
         "config/": "%CONFIG_DIR%/"
     },
     "env": {
-        "#1": "WHERE FIELD PHOTOGRAPHS LIVE IN PRODUCTION — Hetzner Object Storage.",
+        "#1": "WHERE FIELD PHOTOGRAPHS LIVE IN PRODUCTION — S3-compatible object storage.",
         "#2": "",
         "#3": "Unset here on purpose: config/packages/storage.yaml selects the LOCAL adapter,",
         "#4": "which needs none of these, and a half-filled S3 block is how a deployment ends",
@@ -14,9 +14,9 @@
         "#6": "to object storage, set these in the prod secret store and switch",
         "#7": "storage.evidence.adapter to \"s3\" (see the commented block in that file).",
         "#8": "",
-        "#9": "STORAGE_S3_ENDPOINT=https://fsn1.your-objectstorage.com",
-        "#10": "STORAGE_S3_BUCKET=uhifadhi-evidence",
-        "#11": "STORAGE_S3_REGION=fsn1",
+        "#9": "STORAGE_S3_ENDPOINT=",
+        "#10": "STORAGE_S3_BUCKET=",
+        "#11": "STORAGE_S3_REGION=",
         "#12": "STORAGE_S3_KEY=",
         "#13": "STORAGE_S3_SECRET="
     }
