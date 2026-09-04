@@ -8,3 +8,71 @@ when@dev:
 when@test:
     incident:
         dev_tools: true
+
+# ---------------------------------------------------------------------------
+# THE ONE LINE THIS RECIPE CANNOT WRITE — and it is REQUIRED, not an extra you
+# add later.
+#
+# Five columns on this module's tables name a PERSON: who reported the incident,
+# who it is assigned to, who acted on the event, who linked it to another, and
+# the team member behind a party to it. The accounts of an installation are not
+# this module's, so all five are mapped to an interface that
+# uhifadhi/module-contracts publishes, and you resolve that interface to your own
+# class. A recipe has no way to know what you call your people.
+#
+# HOW FAR YOU GET WITHOUT IT — honestly. The bundle installs, the container
+# compiles, and the kernel boots. What you CANNOT do is touch the schema.
+# Anything that walks the metadata — `doctrine:schema:create`,
+# `doctrine:schema:update`, `doctrine:migrations:diff` — stops on the
+# unresolved interface:
+#
+#   In MappingException.php line 72:
+#     Class 'Uhifadhi\ModuleContracts\Entity\UserInterface' does not exist
+#
+# IF YOU INSTALLED uhifadhi/team-module THERE IS NOTHING TO DO. Team provides
+# the account class, so team states the resolution from its own bundle (0.3.2
+# and later) and this step is already answered:
+#
+#   doctrine:
+#       orm:
+#           resolve_target_entities:
+#               Uhifadhi\ModuleContracts\Entity\UserInterface: Uhifadhi\Team\Entity\User
+#
+# You do not write that. It is here so you can recognise it in `debug:config
+# doctrine` and know where it came from.
+#
+# OTHERWISE — no team, or an account class of your own — IT IS YOURS, and it is
+# one line naming your class instead. It has to answer the contract's seven
+# questions — getId, getUuidString, getEmail, getFirstName, getLastName,
+# getFullName, getRangerCode — and be in the mapping chain:
+#
+#   doctrine:
+#       orm:
+#           resolve_target_entities:
+#               Uhifadhi\ModuleContracts\Entity\UserInterface: App\Entity\Person
+#
+# YOUR ANSWER WINS EVEN WITH TEAM INSTALLED. Team's is prepended, and prepended
+# configuration loses to the application's — so naming your own class is all it
+# takes, and there is nothing to disable first.
+#
+# MERGE IT INTO THE BLOCK ALREADY THERE. config/packages/doctrine.yaml opens
+# with `doctrine:`, and a second `doctrine:` key in the same file is not valid
+# YAML — Symfony refuses to boot with `Duplicate key "doctrine" detected`. The
+# `resolve_target_entities` key goes under the `orm:` that is already in that
+# file, beside `mappings`, and it is ONE map: the seam's AreaInterface line and
+# this one sit side by side under it.
+#
+# WHAT THE FIVE COLUMNS DO WHEN AN ACCOUNT GOES. They go null, and the record
+# stays. Removing somebody from the team does not un-happen what they reported —
+# which is why each of those records also keeps the person's NAME beside the
+# relation, written at the time and never rewritten.
+#
+# THEN, in this order:
+#
+#   bin/console doctrine:migrations:diff      # your history, your migration
+#   bin/console doctrine:migrations:migrate
+#   bin/console incidents:taxonomy:sync       # the kinds of incident you record
+#
+# The bundle ships entities, not migrations: the tables are the bundle's, but
+# the migration history is yours, and a vendor replaying its own versions into
+# it would fight every `diff` you ever run.
