@@ -1,0 +1,15 @@
+# The addresses uhifadhi/area-module owns: the register, one area's overview,
+# its zones and its settings.
+#
+# A MODULE MAY SHIP ROUTES — only the shell may not. The controllers carry their
+# own #[Route] attributes; this file is where your application mounts them, and
+# it is yours: prefix them, restrict them, or point somewhere else entirely.
+#
+# THE ROUTE NAMES MATTER. The sidebar section and the area tab strip generate
+# `area_index`, `area_show`, `area_zones` and `area_settings`, and both are
+# route-tolerant: unmount one and its row or tab simply does not appear, rather
+# than every page failing. That is deliberate, so removing a screen is a
+# supported thing to do and not a way to break the frame.
+area:
+    resource: '@UhifadhiAreaBundle/src/Controller/'
+    type: attribute
