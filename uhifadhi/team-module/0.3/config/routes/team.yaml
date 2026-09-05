@@ -17,6 +17,7 @@
 #   /team/{uuid}                        one person's record, and its writes
 #   /team/positions                     the permission matrix — a widget surface
 #   /team/positions/widgets…            its widget library
+#   /departments                        the org chart's home, and its three writes
 #   /reset-password  /reset-password/{token}   forgot, and set a new one
 #   /invite/{token}                     accepting an invitation
 #
@@ -27,9 +28,15 @@
 #
 # THREE OF THESE ARE PUBLIC BY DESIGN and your access_control has to leave them
 # open: /login, /reset-password and /invite/{token} are the screens a stranger
-# reaches with nobody to ask. Everything under /team is gated on the
-# `team.manage` permission by an attribute on the action itself, so it stays
+# reaches with nobody to ask. Everything under /team AND /departments is gated on
+# the `team.manage` permission by an attribute on the action itself, so it stays
 # shut whatever your access_control says.
+#
+# /departments IS NOT UNDER /team, and that is the module's choice rather than an
+# oversight: a department is an org-wide fact the roster is read against, so the
+# sidebar draws it beside Team rather than inside it — and a screen under /team
+# would light the Team row from a page it does not lead to. Prefix it if the
+# address is one your application wants for something else.
 team:
     resource: '@UhifadhiTeamBundle/src/Controller/'
     type: attribute
