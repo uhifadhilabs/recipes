@@ -1,0 +1,52 @@
+{
+    "aliases": [],
+    "recipes": {
+        "uhifadhi/area-module": [
+            "0.1",
+            "0.2"
+        ],
+        "uhifadhi/fixtures-module": [
+            "0.1"
+        ],
+        "uhifadhi/incident-module": [
+            "0.1"
+        ],
+        "uhifadhi/map-module": [
+            "0.1",
+            "0.2"
+        ],
+        "uhifadhi/patrol-module": [
+            "0.1"
+        ],
+        "uhifadhi/seam-module": [
+            "0.1"
+        ],
+        "uhifadhi/shell-module": [
+            "0.1",
+            "0.2",
+            "0.5"
+        ],
+        "uhifadhi/storage-module": [
+            "0.1"
+        ],
+        "uhifadhi/team-module": [
+            "0.1",
+            "0.3"
+        ],
+        "uhifadhi/widget-module": [
+            "0.1"
+        ]
+    },
+    "recipe-conflicts": [],
+    "versions": [],
+    "branch": "main",
+    "is_contrib": false,
+    "_links": {
+        "repository": "github.com/uhifadhilabs/recipes",
+        "origin_template": "{package}:{version}@github.com/uhifadhilabs/recipes:main",
+        "recipe_template": "https://raw.githubusercontent.com/uhifadhilabs/recipes/flex/main/{package_dotted}.{version}.json",
+        "recipe_template_relative": "{package_dotted}.{version}.json",
+        "archived_recipes_template": "https://raw.githubusercontent.com/uhifadhilabs/recipes/flex/main/archived/{package_dotted}/{ref}.json",
+        "archived_recipes_template_relative": "archived/{package_dotted}/{ref}.json"
+    }
+}

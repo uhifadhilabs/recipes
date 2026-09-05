@@ -1,0 +1,68 @@
+{
+    "manifests": {
+        "uhifadhi/team-module": {
+            "manifest": {
+                "bundles": {
+                    "Uhifadhi\\Team\\UhifadhiTeamBundle": [
+                        "all"
+                    ]
+                },
+                "copy-from-recipe": {
+                    "config/": "%CONFIG_DIR%/"
+                }
+            },
+            "files": {
+                "config/packages/team.yaml": {
+                    "contents": [
+                        "# Team (uhifadhi/team-module) \u2014 who this installation's people are and how they",
+                        "# sign in.",
+                        "#",
+                        "# TWO KEYS, AND NEITHER OF THEM IS SECURITY. What a deployment usually wants to",
+                        "# change about signing in \u2014 who may reach what, how long a session lives,",
+                        "# whether there is a remember-me cookie, how hard passwords are hashed \u2014 is not",
+                        "# here and cannot be: it is `config/packages/security.yaml`, which this bundle's",
+                        "# recipe also wrote and which belongs to YOU. Firewalls and access_control are",
+                        "# application configuration by Symfony's own design.",
+                        "#",
+                        "# What IS here is the two things the SCREEN needs and a firewall has no opinion",
+                        "# about. The tree is closed, so an invented key fails loudly.",
+                        "team:",
+                        "    # Where a visitor who asks for /login while already signed in is sent.",
+                        "    #",
+                        "    # A PATH, NOT A ROUTE NAME. The bundle cannot know what you call your home",
+                        "    # screen, and a route name it guessed wrong would be a 500 at the exact",
+                        "    # moment somebody finally got their password right. Where a FRESH sign-in",
+                        "    # lands is a different setting and lives in the firewall",
+                        "    # (form_login.default_target_path).",
+                        "    after_sign_in_path: '/'",
+                        "",
+                        "    # The sentence under the mark on the sign-in card. Say who you are here",
+                        "    # rather than by patching a template out of the vendor tree.",
+                        "    sign_in_lede: 'Analytical observatory for protected areas. Sign in to reach this installation and its modules.'",
+                        ""
+                    ],
+                    "executable": false
+                },
+                "config/routes/team.yaml": {
+                    "contents": [
+                        "# The two addresses uhifadhi/team-module owns: /login and /logout.",
+                        "#",
+                        "# A MODULE MAY SHIP ROUTES \u2014 only the shell may not. The controller carries its",
+                        "# own #[Route] attributes; this file is where your application mounts them, and",
+                        "# it is yours: prefix them, restrict them, or point somewhere else entirely.",
+                        "#",
+                        "# THE ROUTE NAMES MATTER. `config/packages/security.yaml` names `team_login` and",
+                        "# `team_logout` in its form_login and logout keys, so if you drop this file the",
+                        "# firewall has nothing to point at and the container will say so at compile time.",
+                        "team:",
+                        "    resource: '@UhifadhiTeamBundle/src/Controller/'",
+                        "    type: attribute",
+                        ""
+                    ],
+                    "executable": false
+                }
+            },
+            "ref": "6e5fd2d1ba92bba0bc054f517d4588456800f63b"
+        }
+    }
+}
