@@ -1,0 +1,12 @@
+{
+    "bundles": {
+        "Uhifadhi\\Bundle\\RegistryBundle\\RegistryBundle": ["all"],
+        "Uhifadhi\\Bundle\\ShellBundle\\ShellBundle": ["all"],
+        "Uhifadhi\\Bundle\\AtlasBundle\\AtlasBundle": ["all"],
+        "Uhifadhi\\Bundle\\TeamBundle\\TeamBundle": ["all"],
+        "Uhifadhi\\Bundle\\AreaBundle\\AreaBundle": ["all"]
+    },
+    "copy-from-recipe": {
+        "config/": "%CONFIG_DIR%/"
+    }
+}

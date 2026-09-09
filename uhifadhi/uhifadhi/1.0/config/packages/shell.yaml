@@ -1,0 +1,30 @@
+# The shell — what this installation looks like: the document, the page frame,
+# the sidebar and top bar, and the theme every module's pages mount into.
+#
+# NOTHING BELOW IS REQUIRED. All three keys have defaults, and the tree is
+# closed, so an unknown key fails loudly rather than being ignored. There is no
+# database, no migration and no entity behind any of it — the shell draws, it
+# does not remember.
+#
+# THERE IS DELIBERATELY NO KEY LISTING NAV ENTRIES, AREA TABS OR MODULES. Those
+# arrive as data through the shell's contracts, because a nav declared in YAML
+# is a nav no permission check ever reaches.
+shell:
+    # The wordmark beside the brand mark in the sidebar. Yours to change: the
+    # shell cannot know what this installation calls itself.
+    brand_name: Uhifadhi
+
+    # Where the brand mark links. The shell is installed BY an application and
+    # cannot know its route names, so it takes one. `welcome` is the route
+    # config/routes/shell.yaml mounts at `/`; point this at your own home screen
+    # when you have one.
+    home_route: welcome
+
+    # What a visitor who has NEVER chosen a theme gets: light, dark, or `system`
+    # to honour what their operating system already says. All three are real
+    # answers — `system` is not a synonym for light.
+    #
+    # Whatever this says, the choice is applied by an inline script in the
+    # document head, BEFORE the first paint, so nobody is shown the wrong
+    # palette for a frame. A link may override it for one view with `?theme=dark`.
+    default_theme: light

@@ -1,0 +1,2 @@
+  * The core ships entities, not migrations. Write yours and run it: <comment>bin/console doctrine:migrations:diff</comment> then <comment>bin/console doctrine:migrations:migrate</comment>.
+  * Nobody can sign in yet. Add the first administrator with <comment>composer require --dev "uhifadhi/devkit-module:^0.1@dev"</comment> then <comment>bin/console team:user:create</comment>.
