@@ -1,0 +1,11 @@
+# Incidents module screens (uhifadhi/incident-module) — the dashboard, the
+# library, a case file, the money ledger, the report flow, the taxonomy admin and
+# the widget library, all nested under their area:
+# /areas/{uuid}/modules/incidents/…
+#
+# The addresses are the controllers' own, declared as attributes beside the code
+# that answers them. This file is what mounts them, and it is yours: remove the
+# import and the screens are gone from `debug:router` with nothing left behind.
+incident:
+    resource: '@UhifadhiIncidentBundle/src/Controller/'
+    type: attribute
