@@ -18,8 +18,8 @@ storage:
 
     files:
         # Seeing where every file is kept is seeing something about all of them
-        # at once — gate it with the module-configuration permission. Requires a
-        # permission catalogue (uhifadhi/team-module); without one, delete this
+        # at once — gate it with the module-configuration permission the core's
+        # team bundle publishes; without a permission catalogue, delete this
         # line and the bundle falls back to ROLE_ADMIN.
         settings_permission: 'module.create'
         # What YOU call the place files go. Unset, the hub says "This server" or
