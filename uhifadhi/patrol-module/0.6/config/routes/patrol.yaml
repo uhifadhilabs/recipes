@@ -1,0 +1,11 @@
+# Patrols module screens (uhifadhi/patrol-module) — the dashboard, the register,
+# a patrol's detail, the calendar, the recording flow, the observation taxonomy
+# and the widget library, all nested under their area:
+# /areas/{uuid}/modules/patrols/…
+#
+# The addresses are the controllers' own, declared as attributes beside the code
+# that answers them. This file is what mounts them, and it is yours: remove the
+# import and the screens are gone from `debug:router` with nothing left behind.
+patrol:
+    resource: '@UhifadhiPatrolBundle/src/Controller/'
+    type: attribute
