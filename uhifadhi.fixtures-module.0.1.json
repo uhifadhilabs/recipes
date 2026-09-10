@@ -1,0 +1,42 @@
+{
+    "manifests": {
+        "uhifadhi/fixtures-module": {
+            "manifest": {
+                "bundles": {
+                    "Uhifadhi\\Fixtures\\UhifadhiFixturesBundle": [
+                        "all"
+                    ]
+                },
+                "copy-from-recipe": {
+                    "config/": "%CONFIG_DIR%/"
+                },
+                "env": {
+                    "#1": "Demo-account passwords (the fixtures seed refuses these placeholders - set real",
+                    "#2": "values in .env.local). The Super Admin (impersonation) gets its own.",
+                    "DEMO_PASSWORD": "changeme-in-env-local",
+                    "DEMO_SUPER_ADMIN_PASSWORD": "changeme-in-env-local",
+                    "#3": "Domain of the generated demo-account emails (override in .env.local to keep",
+                    "#4": "deployment-specific logins working, e.g. your prod domain).",
+                    "SEEDER_EMAIL_DOMAIN": "uhifadhi.test"
+                }
+            },
+            "files": {
+                "config/packages/fixtures.yaml": {
+                    "contents": [
+                        "# Demo seeding (uhifadhi/fixtures-module). Passwords come from .env.local's",
+                        "# DEMO_* values (the module refuses placeholders); the email domain decides",
+                        "# what the five demo logins look like \u2014 override SEEDER_EMAIL_DOMAIN in",
+                        "# .env.local to keep older logins (e.g. a deployment domain) working locally.",
+                        "fixtures:",
+                        "    demo_password: '%env(DEMO_PASSWORD)%'",
+                        "    super_admin_password: '%env(DEMO_SUPER_ADMIN_PASSWORD)%'",
+                        "    email_domain: '%env(SEEDER_EMAIL_DOMAIN)%'",
+                        ""
+                    ],
+                    "executable": false
+                }
+            },
+            "ref": "01adbc2bd373538108ed01df17688c365f8426d6"
+        }
+    }
+}

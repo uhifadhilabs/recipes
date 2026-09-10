@@ -1,0 +1,260 @@
+{
+    "manifests": {
+        "uhifadhi/uhifadhi": {
+            "manifest": {
+                "bundles": {
+                    "Uhifadhi\\Bundle\\RegistryBundle\\RegistryBundle": [
+                        "all"
+                    ],
+                    "Uhifadhi\\Bundle\\ShellBundle\\ShellBundle": [
+                        "all"
+                    ],
+                    "Uhifadhi\\Bundle\\AtlasBundle\\AtlasBundle": [
+                        "all"
+                    ],
+                    "Uhifadhi\\Bundle\\TeamBundle\\TeamBundle": [
+                        "all"
+                    ],
+                    "Uhifadhi\\Bundle\\AreaBundle\\AreaBundle": [
+                        "all"
+                    ]
+                },
+                "copy-from-recipe": {
+                    "config/": "%CONFIG_DIR%/"
+                },
+                "post-install-output": [
+                    "  * The core ships entities, not migrations. Write yours and run it: <comment>bin/console doctrine:migrations:diff</comment> then <comment>bin/console doctrine:migrations:migrate</comment>.",
+                    "  * Nobody can sign in yet. Add the first administrator with <comment>composer require --dev \"uhifadhi/devkit-module:^0.1@dev\"</comment> then <comment>bin/console team:user:create</comment>."
+                ]
+            },
+            "files": {
+                "config/packages/area.yaml": {
+                    "contents": [
+                        "# The areas \u2014 the ground: areas, their boundaries, the zones inside them, and",
+                        "# the overview every module contributes to.",
+                        "#",
+                        "# THIS FILE IS EMPTY OF SETTINGS, AND THAT IS THE ANSWER. There is no `area:`",
+                        "# key below because the areas have nothing an installation configures: what an",
+                        "# area is called, where its boundary runs and which modules it runs are DATA,",
+                        "# entered on the screens and kept in the database, never lines in a YAML file.",
+                        "# Writing `area:` here with anything under it fails at compile time.",
+                        "#",
+                        "# What the areas DO need from this installation is a database, which",
+                        "# config/packages/doctrine.yaml and DATABASE_URL supply, and a migration, which",
+                        "# `doctrine:migrations:diff` writes. See the README.",
+                        "#",
+                        "# The file is kept so `config/packages/` has one entry per core bundle and",
+                        "# nobody has to wonder whether the areas were forgotten.",
+                        ""
+                    ],
+                    "executable": false
+                },
+                "config/packages/atlas.yaml": {
+                    "contents": [
+                        "# The atlas \u2014 the maps, charts and calendars every screen draws through, and the",
+                        "# chrome they all wear.",
+                        "#",
+                        "# NOTHING BELOW IS REQUIRED; the tree is closed, so an invented key fails",
+                        "# loudly. The one thing an installation usually wants to say is where satellite",
+                        "# imagery comes from.",
+                        "atlas:",
+                        "    satellite:",
+                        "        # esri   \u2014 keyless World Imagery. No account, no session, no key. The",
+                        "        #          default, and the understudy for both others: a map is never",
+                        "        #          blank for want of a key.",
+                        "        # google \u2014 the Map Tiles API. Set `google.api_key` (from an env var) and",
+                        "        #          name this provider to opt in.",
+                        "        # custom \u2014 your own XYZ/WMTS source. `custom.url_template` is then",
+                        "        #          REQUIRED, because a custom source with no url is a blank map",
+                        "        #          at 3am rather than an error at deploy time.",
+                        "        provider: esri",
+                        "",
+                        "        # Deepest zoom the satellite layer is asked for.",
+                        "        max_zoom: 19",
+                        "",
+                        "        #google:",
+                        "        #    # Public by nature \u2014 it travels in every tile URL. Restrict it by",
+                        "        #    # HTTP referrer at Google.",
+                        "        #    api_key: '%env(default::UHIFADHI_GOOGLE_MAPS_API_KEY)%'",
+                        "",
+                        "        #custom:",
+                        "        #    url_template: 'https://tiles.example.org/{z}/{x}/{y}.jpg'",
+                        "        #    # The credit line the source's licence requires. Shown on every map",
+                        "        #    # that draws it.",
+                        "        #    attribution: 'Imagery \u00a9 Example Mapping Agency'",
+                        ""
+                    ],
+                    "executable": false
+                },
+                "config/packages/registry.yaml": {
+                    "contents": [
+                        "# The registry \u2014 the runtime every uhifadhi module registers with: the",
+                        "# catalogue of what this installation has, the record of what each area",
+                        "# switched on, and the permissions modules declare.",
+                        "#",
+                        "# NOTHING BELOW IS REQUIRED. Both keys have defaults and the tree is closed, so",
+                        "# an unknown key fails loudly rather than being ignored.",
+                        "#",
+                        "# THERE IS DELIBERATELY NO KEY LISTING MODULES. Installing a module IS the",
+                        "# declaration, and a second place to enable one is a second place for the two to",
+                        "# disagree. The catalogue reconciles itself with what is installed; there is no",
+                        "# command to run.",
+                        "registry:",
+                        "    # Where a module the catalogue cannot place is filed. A module hands its",
+                        "    # category over as a string and the registry coerces it, so a module written",
+                        "    # by somebody else can never break the catalogue with a typo.",
+                        "    default_category: operations",
+                        "",
+                        "# Dev-only tooling hangs off this flag, so a production installation never grows",
+                        "# machinery that writes invented catalogue rows.",
+                        "when@dev:",
+                        "    registry:",
+                        "        dev_tools: true",
+                        "",
+                        "when@test:",
+                        "    registry:",
+                        "        dev_tools: true",
+                        ""
+                    ],
+                    "executable": false
+                },
+                "config/packages/shell.yaml": {
+                    "contents": [
+                        "# The shell \u2014 what this installation looks like: the document, the page frame,",
+                        "# the sidebar and top bar, and the theme every module's pages mount into.",
+                        "#",
+                        "# NOTHING BELOW IS REQUIRED. All three keys have defaults, and the tree is",
+                        "# closed, so an unknown key fails loudly rather than being ignored. There is no",
+                        "# database, no migration and no entity behind any of it \u2014 the shell draws, it",
+                        "# does not remember.",
+                        "#",
+                        "# THERE IS DELIBERATELY NO KEY LISTING NAV ENTRIES, AREA TABS OR MODULES. Those",
+                        "# arrive as data through the shell's contracts, because a nav declared in YAML",
+                        "# is a nav no permission check ever reaches.",
+                        "shell:",
+                        "    # The wordmark beside the brand mark in the sidebar. Yours to change: the",
+                        "    # shell cannot know what this installation calls itself.",
+                        "    brand_name: Uhifadhi",
+                        "",
+                        "    # Where the brand mark links. The shell is installed BY an application and",
+                        "    # cannot know its route names, so it takes one. `welcome` is the route",
+                        "    # config/routes/shell.yaml mounts at `/`; point this at your own home screen",
+                        "    # when you have one.",
+                        "    home_route: welcome",
+                        "",
+                        "    # What a visitor who has NEVER chosen a theme gets: light, dark, or `system`",
+                        "    # to honour what their operating system already says. All three are real",
+                        "    # answers \u2014 `system` is not a synonym for light.",
+                        "    #",
+                        "    # Whatever this says, the choice is applied by an inline script in the",
+                        "    # document head, BEFORE the first paint, so nobody is shown the wrong",
+                        "    # palette for a frame. A link may override it for one view with `?theme=dark`.",
+                        "    default_theme: light",
+                        ""
+                    ],
+                    "executable": false
+                },
+                "config/packages/team.yaml": {
+                    "contents": [
+                        "# The team \u2014 people: accounts, positions, departments, and the screens somebody",
+                        "# signs in, resets a password or accepts an invitation through.",
+                        "#",
+                        "# NONE OF THESE FOUR KEYS IS SECURITY. Who may reach what, how long a session",
+                        "# lives, whether there is a remember-me cookie: that is config/packages/security.yaml,",
+                        "# which this installation owns. What is here is what the SCREENS and the LETTERS",
+                        "# need and a firewall has no opinion about.",
+                        "#",
+                        "# The tree is closed, so an invented key fails loudly.",
+                        "team:",
+                        "    # Where a visitor who asks for /login while already signed in is sent. A",
+                        "    # path, not a route name \u2014 the team cannot know what your home screen is",
+                        "    # called.",
+                        "    after_sign_in_path: /",
+                        "",
+                        "    # The sentence under the mark on the sign-in card.",
+                        "    sign_in_lede: 'Analytical observatory for protected areas. Sign in to reach this installation and its modules.'",
+                        "",
+                        "    # The address invitations and password-reset links come from. EMPTY MEANS",
+                        "    # THIS INSTALLATION CANNOT SEND: the invite path is then offered and refused",
+                        "    # in writing, and the forgot-password screen says so rather than swallowing",
+                        "    # the request. Set it, and set MAILER_DSN in .env.local, before you invite",
+                        "    # anybody.",
+                        "    mail_from: ''",
+                        "",
+                        "    # What an email calls this installation in its subject line.",
+                        "    installation_name: Uhifadhi",
+                        ""
+                    ],
+                    "executable": false
+                },
+                "config/routes/area.yaml": {
+                    "contents": [
+                        "# The area screens: the register, an area's overview, its zones, its settings",
+                        "# and the grid where an administrator switches modules on and off for it.",
+                        "#",
+                        "# The addresses are the controllers' own, declared as attributes beside the code",
+                        "# that answers them. This file is what mounts them, and it is yours.",
+                        "#",
+                        "# Every module renders under `/areas/{uuid}/modules/<its slug>`, and a module",
+                        "# mounts its own routes through its own file beside this one. Nothing here has",
+                        "# to change when a module arrives.",
+                        "area:",
+                        "    resource: '@AreaBundle/Controller/'",
+                        "    type: attribute",
+                        ""
+                    ],
+                    "executable": false
+                },
+                "config/routes/shell.yaml": {
+                    "contents": [
+                        "# The shell's route \u2014 one line, and it is yours.",
+                        "#",
+                        "# The shell ships one route: the welcome page, named `welcome`, at `/` \u2014 the one",
+                        "# screen a fresh installation has before it has grown one of its own. The core",
+                        "# DEFINES it and loads it nowhere. This import is what makes it reachable, and",
+                        "# this file belongs to YOUR application.",
+                        "#",
+                        "# THAT IS THE WHOLE OF THE SHELL'S CLAIM ON A URL, and withdrawing it is one",
+                        "# edit. The day this installation has a real home screen, point `/` at it here \u2014",
+                        "# or delete this file and let whichever module owns the front door claim the",
+                        "# address. Nothing in the shell depends on the route name or on the route",
+                        "# existing; nothing is left behind.",
+                        "#",
+                        "# `debug:router` shows what you are replacing.",
+                        "shell:",
+                        "    resource: '@ShellBundle/config/routes/welcome.php'",
+                        "",
+                        "# The configure pages \u2014 the area's and every module's, one frame the shell owns.",
+                        "shell_configure:",
+                        "    resource: '@ShellBundle/config/routes/configure.php'",
+                        ""
+                    ],
+                    "executable": false
+                },
+                "config/routes/team.yaml": {
+                    "contents": [
+                        "# The team's screens: signing in and out, the password reset, accepting an",
+                        "# invitation, the people register, positions and departments, and the endpoint a",
+                        "# field client asks for a token at.",
+                        "#",
+                        "# The addresses are the controllers' own, declared as attributes beside the code",
+                        "# that answers them. This file is what mounts them, and it is yours: unmount a",
+                        "# screen by removing this import, and it is gone from `debug:router` with",
+                        "# nothing left behind.",
+                        "#",
+                        "# WHO MAY REACH THEM IS NOT DECIDED HERE. config/packages/security.yaml puts",
+                        "# everything behind sign-in and names the three of these a stranger must reach",
+                        "# (`/login`, `/reset-password`, `/invite/\u2026`); what a signed-in person may DO on",
+                        "# them is checked in the controllers.",
+                        "team:",
+                        "    resource: '@TeamBundle/Controller/'",
+                        "    type: attribute",
+                        ""
+                    ],
+                    "executable": false
+                }
+            },
+            "ref": "9882fb5cfcd98c791d6b4f00ef07afc70b137d79"
+        }
+    }
+}

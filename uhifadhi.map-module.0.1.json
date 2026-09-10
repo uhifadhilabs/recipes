@@ -1,0 +1,89 @@
+{
+    "manifests": {
+        "uhifadhi/map-module": {
+            "manifest": {
+                "bundles": {
+                    "Uhifadhi\\Map\\UhifadhiMapBundle": [
+                        "all"
+                    ]
+                },
+                "copy-from-recipe": {
+                    "config/": "%CONFIG_DIR%/"
+                },
+                "env": {
+                    "#1": "Satellite imagery key, used only when a deployment sets the satellite",
+                    "#2": "provider to google (see config/packages/map.yaml). Unset is a valid state:",
+                    "#3": "the bundle draws keyless Esri World Imagery and asks nobody. Public by",
+                    "#4": "nature - it travels inside every tile URL - so restrict it by HTTP referrer",
+                    "#5": "at Google rather than treating it as a secret. A missing key must never",
+                    "#6": "break a map, and it does not.",
+                    "#7": "https://developers.google.com/maps/documentation/tile/session_tokens",
+                    "UHIFADHI_GOOGLE_MAPS_API_KEY": ""
+                }
+            },
+            "files": {
+                "config/packages/map.yaml": {
+                    "contents": [
+                        "# The map platform (uhifadhi/map-module) \u2014 self-hosted Leaflet, the basemap",
+                        "# seam, the boundary drawing and the map chrome every map in the product wears.",
+                        "#",
+                        "# WHICH IMAGERY. Nothing is set here, so every environment gets the bundle's",
+                        "# default: `esri`, the keyless World Imagery. It draws everywhere, costs",
+                        "# nothing and needs no account, which is what a fresh installation wants.",
+                        "#",
+                        "# To use Google satellite instead, set the provider in an environment you",
+                        "# actually hold a key for \u2014 typically prod only \u2014 and leave the rest on Esri:",
+                        "#",
+                        "#   when@prod:",
+                        "#       map:",
+                        "#           satellite:",
+                        "#               provider: google",
+                        "#               google:",
+                        "#                   api_key: '%env(default::UHIFADHI_GOOGLE_MAPS_API_KEY)%'",
+                        "#",
+                        "# The key is public by nature \u2014 it travels inside every tile URL \u2014 so restrict",
+                        "# it by HTTP referrer at Google rather than treating it as a secret. An unset",
+                        "# key is a valid state: the bundle falls back to Esri and asks nobody. Note",
+                        "# that some accounts and regions are refused satellite outright (a 403 on",
+                        "# createSession); if that is yours, stay on Esri rather than re-earning the",
+                        "# refusal on every map.",
+                        "map:",
+                        "    module_category: operations",
+                        "",
+                        "# THE THREE IMPORTMAP LINES, WRITTEN FOR YOU \u2014 BUT NOT BY THIS RECIPE.",
+                        "#",
+                        "# The bundle registers its own assets/ directory under the AssetMapper",
+                        "# namespace @uhifadhi/map-module, and importmap entries are read from the",
+                        "# host's single importmap.php. A recipe cannot write them: recipes copy files",
+                        "# and patch YAML, and importmap.php is PHP.",
+                        "#",
+                        "# Flex can, and does. uhifadhi/map-module declares the entries itself, in its",
+                        "# assets/package.json under symfony.importmap, and Flex runs importmap:require",
+                        "# once per entry on install \u2014 the same mechanism symfony/stimulus-bundle uses",
+                        "# for its loader. Nothing is added by hand any more. What lands in",
+                        "# importmap.php is:",
+                        "#",
+                        "#   'uhifadhi/basemaps'   => ['path' => './vendor/uhifadhi/map-module/assets/basemaps.js'],",
+                        "#   'uhifadhi/boundary'   => ['path' => './vendor/uhifadhi/map-module/assets/boundary.js'],",
+                        "#   'uhifadhi/map-chrome' => ['path' => './vendor/uhifadhi/map-module/assets/chrome.js'],",
+                        "#",
+                        "# (The vendor-relative path is what importmap:require stores; the logical path",
+                        "# @uhifadhi/map-module/basemaps.js names the same file and is equally valid if",
+                        "# you ever write one by hand.)",
+                        "#",
+                        "# It needs the host to HAVE an importmap.php \u2014 a host running AssetMapper. A",
+                        "# host that installed the bundle for the Leaflet build alone has nothing to",
+                        "# write into and gets nothing written, which is correct.",
+                        "#",
+                        "# The keys are bare specifiers on purpose: every importer \u2014 the host's own map",
+                        "# controllers and each module's map \u2014 imports the NAME, never the path, so the",
+                        "# files can move underneath them without touching a single import site.",
+                        ""
+                    ],
+                    "executable": false
+                }
+            },
+            "ref": "31c8057d55bf9c36dafcc5eb23ce1ae34d402253"
+        }
+    }
+}

@@ -1,0 +1,45 @@
+{
+    "manifests": {
+        "uhifadhi/area-module": {
+            "manifest": {
+                "bundles": {
+                    "Uhifadhi\\Area\\UhifadhiAreaBundle": [
+                        "all"
+                    ]
+                },
+                "copy-from-recipe": {
+                    "config/": "%CONFIG_DIR%/"
+                }
+            },
+            "files": {
+                "config/routes/area.yaml": {
+                    "contents": [
+                        "# The addresses uhifadhi/area-module owns: the register, the create screen, one",
+                        "# area's overview, its module grid and shop, its zones and its settings.",
+                        "#",
+                        "# A MODULE MAY SHIP ROUTES \u2014 only the shell may not. The controllers carry their",
+                        "# own #[Route] attributes; this file is where your application mounts them, and",
+                        "# it is yours: prefix them, restrict them, or point somewhere else entirely.",
+                        "#",
+                        "# THE ROUTE NAMES MATTER. The sidebar section and the area tab strip generate",
+                        "# `area_index`, `area_new`, `area_show`, `seam_area_modules`, `area_zones` and",
+                        "# `area_settings`, and both are route-tolerant: unmount one and its row or tab",
+                        "# simply does not appear, rather than every page failing. That is deliberate, so",
+                        "# removing a screen is a supported thing to do and not a way to break the frame.",
+                        "#",
+                        "# `seam_area_modules` IS A FLEET NAME, not this module's. Other module bundles",
+                        "# generate it blind to link back to the area's module grid \u2014 the patrol module's",
+                        "# breadcrumb does \u2014 and print plain text where nothing answers. Renaming it here",
+                        "# is supported and costs you those links; the pages themselves stay reachable.",
+                        "area:",
+                        "    resource: '@UhifadhiAreaBundle/src/Controller/'",
+                        "    type: attribute",
+                        ""
+                    ],
+                    "executable": false
+                }
+            },
+            "ref": "bc5d8d6d7cc52fbb0c2b4818f8f341a519960e38"
+        }
+    }
+}
