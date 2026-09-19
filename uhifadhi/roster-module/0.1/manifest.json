@@ -4,5 +4,8 @@
     },
     "copy-from-recipe": {
         "config/": "%CONFIG_DIR%/"
+    },
+    "conflict": {
+        "symfony/stimulus-bundle": "<2.20"
     }
 }

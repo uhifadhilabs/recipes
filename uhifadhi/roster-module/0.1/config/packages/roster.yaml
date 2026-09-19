@@ -99,6 +99,20 @@ when@test:
         dev_tools: true
 
 # ---------------------------------------------------------------------------
+# THE CYCLE EDITOR'S CONTROLLER. This module ships one Stimulus controller,
+# `roster--rotation`, and a recipe cannot merge into `assets/controllers.json`
+# — Flex writes that file from the package's own `assets/package.json`, which
+# declares the controller enabled. If the ring, the per-day counts or the pool
+# do not respond on the Rotation section, that is the line to check:
+#
+#   bin/console debug:asset-map | grep roster-module
+#   cat assets/controllers.json          # expects "@uhifadhi/roster-module"
+#
+# The page still READS without it: the rotation renders as it stands and only
+# the editing is inert, so a failed asset compile is a page somebody can read
+# rather than a row of dead buttons.
+#
+# ---------------------------------------------------------------------------
 # AFTER INSTALLING, in this order:
 #
 #   bin/console doctrine:migrations:migrate   # the module's own tables
