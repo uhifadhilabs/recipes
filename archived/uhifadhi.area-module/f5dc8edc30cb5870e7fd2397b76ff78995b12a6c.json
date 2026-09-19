@@ -1,0 +1,15 @@
+{
+    "manifests": {
+        "uhifadhi/area-module": {
+            "manifest": {
+                "bundles": {
+                    "Uhifadhi\\Area\\UhifadhiAreaBundle": [
+                        "all"
+                    ]
+                }
+            },
+            "files": [],
+            "ref": "f5dc8edc30cb5870e7fd2397b76ff78995b12a6c"
+        }
+    }
+}

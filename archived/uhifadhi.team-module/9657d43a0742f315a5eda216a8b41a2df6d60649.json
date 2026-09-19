@@ -1,0 +1,126 @@
+{
+    "manifests": {
+        "uhifadhi/team-module": {
+            "manifest": {
+                "bundles": {
+                    "Uhifadhi\\Team\\UhifadhiTeamBundle": [
+                        "all"
+                    ]
+                },
+                "copy-from-recipe": {
+                    "config/": "%CONFIG_DIR%/"
+                }
+            },
+            "files": {
+                "config/packages/team.yaml": {
+                    "contents": [
+                        "# Team (uhifadhi/team-module) \u2014 who this installation's people are, what they",
+                        "# may do, and how they sign in.",
+                        "#",
+                        "# NONE OF THESE FOUR KEYS IS SECURITY. What a deployment usually wants to change",
+                        "# about signing in \u2014 who may reach what, how long a session lives, whether there",
+                        "# is a remember-me cookie, how hard passwords are hashed \u2014 is not here and",
+                        "# cannot be: it is `config/packages/security.yaml`, which belongs to YOU.",
+                        "# Firewalls and access_control are application configuration by Symfony's own",
+                        "# design, and this module's README gives you the file to paste.",
+                        "#",
+                        "# What IS here is the four things the SCREENS need and a firewall has no opinion",
+                        "# about. The tree is closed, so an invented key fails loudly.",
+                        "team:",
+                        "    # Where a visitor who asks for /login while already signed in is sent.",
+                        "    #",
+                        "    # A PATH, NOT A ROUTE NAME. The bundle cannot know what you call your home",
+                        "    # screen, and a route name it guessed wrong would be a 500 at the exact",
+                        "    # moment somebody finally got their password right. Where a FRESH sign-in",
+                        "    # lands is a different setting and lives in the firewall",
+                        "    # (form_login.default_target_path).",
+                        "    after_sign_in_path: '/'",
+                        "",
+                        "    # The sentence under the mark on the sign-in card. Say who you are here",
+                        "    # rather than by patching a template out of the vendor tree.",
+                        "    sign_in_lede: 'Analytical observatory for protected areas. Sign in to reach this installation and its modules.'",
+                        "",
+                        "    # \u2500\u2500 THE TWO LETTERS THIS MODULE SENDS \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",
+                        "    # An invitation, and a password-reset link. NEITHER OF THESE KEYS IS THE",
+                        "    # MAILER: the transport is MAILER_DSN and belongs to the framework. What is",
+                        "    # here is the two things a LETTER needs that no transport has an opinion",
+                        "    # about.",
+                        "",
+                        "    # The address they come from. EMPTY IS THE HONEST DEFAULT and it is a",
+                        "    # working state, not a broken one: with no from-address this installation",
+                        "    # reports that it cannot send, and the two screens that would have sent",
+                        "    # something say so in writing rather than swallowing the request.",
+                        "    #",
+                        "    #   \u00b7 /team/invite keeps the invite-by-email form VISIBLE, with the button",
+                        "    #     inert and the reason on it \u2014 because hiding it would leave an",
+                        "    #     administrator hunting for a feature the product does have. The other",
+                        "    #     path on that page, create-with-a-password, needs nothing at all from",
+                        "    #     the deployment and works from day one.",
+                        "    #   \u00b7 /reset-password says the installation cannot send email yet, because",
+                        "    #     a silently discarded reset is the worst failure that flow has.",
+                        "    #",
+                        "    # Set this AND a MAILER_DSN, and both paths start working with no other",
+                        "    # change.",
+                        "    mail_from: ''",
+                        "",
+                        "    # What those letters call this installation in their subject line. The",
+                        "    # default is the product, never somebody's authority \u2014 a default naming an",
+                        "    # organisation would be a lie on every other installation.",
+                        "    installation_name: 'Uhifadhi'",
+                        ""
+                    ],
+                    "executable": false
+                },
+                "config/routes/team.yaml": {
+                    "contents": [
+                        "# The addresses uhifadhi/team-module owns.",
+                        "#",
+                        "# A MODULE MAY SHIP ROUTES \u2014 only the shell may not. Every controller carries",
+                        "# its own #[Route] attributes; this file is where your application mounts them,",
+                        "# and it is yours: prefix them, restrict them, or point somewhere else entirely.",
+                        "#",
+                        "# ONE IMPORT, NOT A LIST. The directory is loaded whole, so a screen this module",
+                        "# adds in a later release arrives without you editing this file \u2014 which is the",
+                        "# behaviour you want from a module and the reason the resource is a directory.",
+                        "#",
+                        "# WHAT IT MOUNTS TODAY:",
+                        "#",
+                        "#   /login  /logout                     the sign-in screen",
+                        "#   /team                               the roster \u2014 a widget surface",
+                        "#   /team/widgets\u2026                      its widget library",
+                        "#   /team/invite                        both ways of adding somebody",
+                        "#   /team/{uuid}                        one person's record, and its writes",
+                        "#   /team/positions                     the permission matrix \u2014 a widget surface",
+                        "#   /team/positions/widgets\u2026            its widget library",
+                        "#   /departments                        the org chart's home, and its three writes",
+                        "#   /reset-password  /reset-password/{token}   forgot, and set a new one",
+                        "#   /invite/{token}                     accepting an invitation",
+                        "#",
+                        "# THE ROUTE NAMES MATTER. `config/packages/security.yaml` names `team_login` and",
+                        "# `team_logout` in its form_login and logout keys, so if you drop this file the",
+                        "# firewall has nothing to point at and the container will say so at compile",
+                        "# time.",
+                        "#",
+                        "# THREE OF THESE ARE PUBLIC BY DESIGN and your access_control has to leave them",
+                        "# open: /login, /reset-password and /invite/{token} are the screens a stranger",
+                        "# reaches with nobody to ask. Everything under /team AND /departments is gated on",
+                        "# the `team.manage` permission by an attribute on the action itself, so it stays",
+                        "# shut whatever your access_control says.",
+                        "#",
+                        "# /departments IS NOT UNDER /team, and that is the module's choice rather than an",
+                        "# oversight: a department is an org-wide fact the roster is read against, so the",
+                        "# sidebar draws it beside Team rather than inside it \u2014 and a screen under /team",
+                        "# would light the Team row from a page it does not lead to. Prefix it if the",
+                        "# address is one your application wants for something else.",
+                        "team:",
+                        "    resource: '@UhifadhiTeamBundle/src/Controller/'",
+                        "    type: attribute",
+                        ""
+                    ],
+                    "executable": false
+                }
+            },
+            "ref": "9657d43a0742f315a5eda216a8b41a2df6d60649"
+        }
+    }
+}
