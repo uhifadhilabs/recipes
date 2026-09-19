@@ -1,0 +1,15 @@
+# Roster module screens (uhifadhi/roster-module) — the module's tabs and the
+# three sections of its configure page, all nested under their area:
+# /areas/{uuid}/modules/roster/…
+#
+# The addresses are the controllers' own, declared as attributes beside the code
+# that answers them. This file is what mounts them, and it is yours: remove the
+# import and the screens are gone from `debug:router` with nothing left behind.
+#
+# THE CONFIGURE PAGE ITSELF IS NOT HERE. `/areas/{uuid}/modules/roster/configure`
+# belongs to the core's shell, which mounts it once for every surface in the
+# platform; this module's three sections sit BESIDE it — /rotation, /watches,
+# /settings — precisely so they cannot race the frame's own route.
+roster:
+    resource: '@UhifadhiRosterBundle/src/Controller/'
+    type: attribute

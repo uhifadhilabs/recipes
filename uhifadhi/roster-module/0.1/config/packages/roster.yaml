@@ -1,0 +1,159 @@
+# Roster (uhifadhi/roster-module) — who is due on watch, where and when: the
+# rotation a post or a team runs, the duties it generates, the swaps and
+# absences that change them, and the on-duty presence read back from the area.
+#
+# NOTHING BELOW IS REQUIRED. Every key has a default, and the tree is CLOSED, so
+# an invented key fails at compile time rather than being ignored. Delete the
+# whole `roster:` key and a fresh installation still runs — it simply uses the
+# vocabulary written out below.
+#
+# WHAT THIS MODULE STANDS ON. Everything that is not about rosters arrives with
+# `uhifadhi/uhifadhi`: the per-area catalogue this module's tile is filed in
+# (registry), the page frame and the configure page its sections hang off
+# (shell), the people a duty names (team), and — load-bearing here — the AREA,
+# which owns the station a watch is stood at, the posting that puts somebody
+# there, the check-in and the presence derived from it. This module owns the
+# plan and reads the presence; it computes none of it.
+#
+# UNTIL `uhifadhi/uhifadhi` IS ON PACKAGIST an installation names where it comes
+# from itself. Composer reads `repositories` from the ROOT package only — an
+# entry in a dependency's own composer.json is ignored — so it goes in the
+# application's composer.json:
+#
+#   "repositories": [
+#       { "type": "vcs", "url": "https://github.com/uhifadhilabs/uhifadhi" }
+#   ]
+#
+# with `"minimum-stability": "dev"` and `"prefer-stable": true` beside it,
+# because composer will not resolve a transitive dev dependency under a stable
+# floor. This module itself is on Packagist and needs no entry.
+roster:
+    # Which catalogue category the Roster tile is filed under in every area.
+    # OPERATIONS, because a roster is the rangers' OWN work — `pressure` in the
+    # catalogue means human pressure ON the ecosystem.
+    module_category: operations
+
+    # THE SHIFT VOCABULARY A NEW AREA IS SEEDED WITH — and read exactly once
+    # per area, the first time anything asks for its list.
+    #
+    # IT IS A SEED AND NOT THE LIST. "One list for the whole area" is ruled:
+    # the running vocabulary is rows an area edits on the module's own Settings
+    # section, where a shift is renamed freely and CLOSED rather than deleted,
+    # because a past month has to keep the word that described it. Changing a
+    # line here therefore affects areas that have not been looked at yet, and
+    # leaves settled ones alone — which is what you want, and worth knowing
+    # before you edit it expecting otherwise.
+    #
+    # The KEY is stored on every duty and must never change once duties carry
+    # it; the label is only what a screen shows. A WINDOW MAY CROSS MIDNIGHT —
+    # `night` runs 18:00 to 06:00 — and a duty belongs to the calendar day its
+    # watch BEGINS on, so a night watch is one duty and two blocks on a day
+    # board. `off` is reserved: a rotation's ring spells a stood-down day that
+    # way, so a shift of that name would make every stored cycle ambiguous.
+    shifts:
+        - { key: day,    label: Day,         start: '06:00', end: '18:00' }
+        - { key: night,  label: Night,       start: '18:00', end: '06:00' }
+        - { key: office, label: Office,      start: '07:30', end: '16:30' }
+        - { key: radio,  label: 'Radio night', start: '18:00', end: '06:00' }
+
+    # THE VALUES A NEW AREA SETTING, STATION WATCH OR ROTATION STARTS AT — read
+    # when one is CREATED and never at display time. What a station or an area
+    # actually runs at afterwards is its own stored value, edited on a screen;
+    # a config value read at display time would silently override whatever a
+    # park set, and the override would be invisible.
+    defaults:
+        # Positions per hour, per handset. It trades against the catchment: a
+        # wide catchment tolerates a slow interval, a tight one does not — at
+        # 2 km and 60 min a ranger can leave and return unseen — and every
+        # minute taken off it costs battery in a place with no mains.
+        ping_interval_minutes: 30
+
+        # How long a post may go quiet before it reads as LATE. Per station in
+        # the product: a gate that never closes and a rim post reached once a
+        # fortnight cannot share one.
+        silence_window_minutes: 120
+
+        # How long before late becomes OFFLINE. Offline is a fact about the
+        # post and never about its people, and it clears itself when something
+        # lands — nothing is dismissed by hand.
+        offline_after_minutes: 1440
+
+        # How close a ping has to be for a claim of "at post" to read as
+        # verified. It never hides anything: a claim whose positions fall
+        # outside it is SHOWN AND FLAGGED as unverified, never corrected and
+        # never turned into an absence.
+        catchment_metres: 1500
+
+        # How far ahead a NEW rotation generates duties. The editor offers six
+        # weeks, three months and the end of the year; all three write a number
+        # of days, because a stored preset called "end of the year" would mean
+        # something different every January.
+        horizon_days: 42
+
+when@dev:
+    roster:
+        dev_tools: true
+
+when@test:
+    roster:
+        dev_tools: true
+
+# ---------------------------------------------------------------------------
+# AFTER INSTALLING, in this order:
+#
+#   bin/console doctrine:migrations:migrate   # the module's own tables
+#   bin/console doctrine:migrations:diff      # must say "No changes detected"
+#   bin/console registry:sync                 # put Roster in the catalogue
+#   bin/console cache:clear
+#   bin/console asset-map:compile             # not optional
+#
+# THIS MODULE SHIPS ITS OWN MIGRATIONS, and that is the fleet ruling: the tables
+# are the bundle's, so the SQL that creates them arrives with it and an
+# installation writes no version for `roster_*`. `doctrine:migrations:diff`
+# stays what you run for the entities YOU write, and after an update of this
+# package it must report no changes — churn there is a bundle bug, not
+# something to route around.
+#
+# THEN SWITCH IT ON. A module is installed but PARKED: the registry seeds it
+# into every area's ledger switched off, and every page of it answers 404 in an
+# area that has not taken it — 404 and not 403, because a parked module is not
+# withheld, the area is simply not running it. Turn it on per area from the
+# area's Modules page.
+#
+# AND GRANT THE PERMISSION. This module declares one, `roster.manage`, and
+# grants it to nobody: changing how an area runs its roster — the rotations,
+# what each post's watch expects, the settings — needs it. Assign it in Team's
+# permission matrix. Reading the pages needs nothing.
+#
+# A HEAVY CONSOLE RUN GOES WITH `--no-debug`. A warm-up that walks the registry
+# collects every query of every request while the debug kernel is on, and on a
+# small box that is how a `cache:warmup` meets the memory limit.
+#
+# ---------------------------------------------------------------------------
+# WHO THE DUTIES POINT AT — and why there is nothing to write here.
+#
+# Several columns on this module's tables name a PERSON: who is on the watch,
+# who is away, who recorded the absence, who edited the day. None of them names
+# an account class; all of them are mapped to
+# `Uhifadhi\Contracts\Entity\UserInterface`, and the core's TeamBundle — the
+# package that actually provides the accounts — states the resolution from its
+# own bundle. Whoever knows the answer states it, so an ordinary installation
+# writes no doctrine line at all.
+#
+# YOU WRITE A LINE ONLY TO DISAGREE — to name your own account class instead. It
+# goes under the `orm:` key ALREADY IN config/packages/doctrine.yaml, beside
+# `mappings`, never as a second `doctrine:` key in that file:
+#
+#   doctrine:
+#       orm:
+#           resolve_target_entities:
+#               Uhifadhi\Contracts\Entity\UserInterface: App\Entity\Person
+#
+# ---------------------------------------------------------------------------
+# WHAT THIS MODULE DOES NOT DO, said once so nobody goes looking for it.
+#
+# There is NO on-duty field on any form here, for any role, including an
+# administrator. Presence is derived from a ranger's own check-in and the pings
+# that followed it — both the AREA's — and this module reads that derivation
+# rather than keeping a second one. A roster says who is DUE at a post tonight;
+# it never says who is there.
